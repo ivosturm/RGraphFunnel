@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<widget id="RGraphFunnel.widget.RGraphFunnel" needsEntityContext="true" xmlns="http://www.mendix.com/widget/1.0/">
+    <name>RGraph Funnel</name>
+    <description>Create a Funnel Chart for your webpage using the RGraph library.</description>
+    <icon>
+	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
+	
+	</icon>
+    <properties>
+		<property key="textColor" type="string" required="true" defaultValue="#816c6a">
+            <caption>Text Color</caption>
+            <category>Appearance</category>
+            <description>The color being used in the title, ticks and display value.</description>
+        </property>
+		<property key="textFont" type="string" required="true" defaultValue="Arial">
+            <caption>Text Font</caption>
+            <category>Appearance</category>
+            <description>The font used to render the text.</description>
+        </property>
+		<property key="textSize" type="integer" required="true" defaultValue="10">
+            <caption>Text Size</caption>
+            <category>Appearance</category>
+            <description>The size (in points) of the labels.</description>
+        </property>
+        <property key="gutterRight" type="integer" required="true" defaultValue="5">
+            <caption>Gutter Right</caption>
+            <category>Appearance</category>
+            <description>The right gutter of the chart. The gutter is where the labels and title are.</description>
+        </property>
+        <property key="gutterLeft" type="integer" required="true" defaultValue="150">
+            <caption>Gutter Left</caption>
+            <category>Appearance</category>
+            <description>The left gutter of the chart.</description>
+        </property>
+        <property key="gutterBottom" type="integer" required="true" defaultValue="5">
+            <caption>Gutter Bottom</caption>
+            <category>Appearance</category>
+            <description>The bottom gutter of the chart. </description>
+        </property>
+        <property key="gutterTop" type="integer" required="true" defaultValue="5">
+            <caption>Gutter Top</caption>
+            <category>Appearance</category>
+            <description>The top gutter of the chart. </description>
+        </property>
+		<property key="shadow" type="boolean" required="true" defaultValue="true">
+            <caption>Shadow</caption>
+            <category>Appearance</category>
+            <description>Whether a drop shadow is applied to the Funnel chart. </description>
+        </property>
+        <property key="shadowBlur" type="integer" required="true" defaultValue="3">
+            <caption>Shadow Blur</caption>
+            <category>Appearance</category>
+            <description>The severity of the shadow blurring effect.</description>
+        </property>
+        <property key="shadowColor" type="string" required="true" defaultValue="#C9C9C9">
+            <caption>Shadow Color</caption>
+            <category>Appearance</category>
+            <description>The color of the drop shadow.</description>
+        </property>
+		<property key="labelsSticks" type="boolean" required="true" defaultValue="true">
+            <caption>Label Sticks</caption>
+            <category>Appearance</category>
+            <description>If your labels are offset you can use this to show indicating sticks.</description>
+        </property>
+		<property key="textBoxed" type="boolean" required="true" defaultValue="false">
+            <caption>Text Boxed</caption>
+            <category>Appearance</category>
+            <description>Whether the text is contained within a white bounding box. In some cases this can help readability.</description>
+        </property>
+
+        <property key="sliceEntity" type="entity" required="true" allowNonPersistableEntities="true" >
+            <caption>Slice Entity</caption>
+            <category>Data Source</category>
+            <description>The entity returned by the get Slices microflow</description>
+        </property>
+        <property key="valueAttr" type="attribute" entityProperty="sliceEntity" required="true">
+            <caption>Value Attribute</caption>
+            <category>Data Source</category>
+            <description>The attribute used for the value of the slices displayed in the Funnel</description>
+            <attributeTypes>
+                <attributeType name="Integer"/>
+				<attributeType name="Decimal"/>
+            </attributeTypes>
+        </property>
+        <property key="labelAttr" type="attribute" entityProperty="sliceEntity" required="true">
+            <caption>Label Attribute</caption>
+            <category>Data Source</category>
+            <description>The attribute used for the label + tooltip. The actual label will consist of this attribute plus the value concatenated with an ':'in between.</description>
+            <attributeTypes>
+                <attributeType name="String"/>
+            </attributeTypes>
+        </property>
+        <property key="colorAttr" type="attribute" entityProperty="sliceEntity" required="true">
+            <caption>Color Attribute</caption>
+            <category>Data Source</category>
+            <description>The attribute used for the color of the slices displayed in the Funnel</description>
+            <attributeTypes>
+                <attributeType name="String"/>
+            </attributeTypes>
+        </property>
+        <property key="funnelWidth" type="integer" required="true" defaultValue="300">
+            <caption>Width</caption>
+            <category>Appearance</category>
+            <description>The width of the Funnel Chart</description>
+        </property>
+        <property key="funnelHeight" type="integer" required="true" defaultValue="300">
+            <caption>Height</caption>
+            <category>Appearance</category>
+            <description>The height of the Funnel Chart</description>
+        </property>
+        <property key="sliceMicroflow" type="microflow" required="false" defaultValue="">
+            <caption>Get Slices MF</caption>
+            <category>Data Source</category>
+            <description>The microflow which creates all (non-persistent) slices to be displayed in the Funnel.</description>
+            <returnType type="Object" isList="true" entityProperty="sliceEntity"/>
+        </property>
+        <property key="onClickMF" type="microflow" required="false" entityProperty="sliceEntity">
+            <caption>On Click Microflow</caption>
+            <category>Interaction</category>
+            <description>The microflow to execute when clicking on a specific slice in the funnel.</description>
+            <returnType type="Boolean" />
+        </property>
+    </properties>
+</widget>

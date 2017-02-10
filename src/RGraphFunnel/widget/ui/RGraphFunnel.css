@@ -1,0 +1,20 @@
+ body {
+   background: #fff;
+ }
+ 
+ .metric {
+   padding: 10%;
+ }
+ 
+ .metric svg {
+   max-width: 100%;
+ }
+ 
+ .metric path {
+   fill: none;
+ }
+ 
+ .metric text {
+   font-family: "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif;
+ }
+ 
