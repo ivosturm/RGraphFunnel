@@ -4,15 +4,19 @@
     ========================
 
     @file      : RGraphFunnel.js
-    @version   : 1.0.0
+    @version   : 1.0.1
     @author    : Ivo Sturm
-    @date      : 09-02-2017
+    @date      : 15-02-2017
     @copyright : First Consulting
     @license   : Apache 2
 
     Documentation
     ========================
     Add a Funnel chart based on the RGraph library to your application. 
+	
+	Versions
+	========================
+	v 1.0.1 Added fix for duplicate graphs occuring when continuously loading. Also set textAccesible to false.
 */
 
 // Required module list. 
@@ -61,15 +65,19 @@ define([
 
             logger.debug(this.id + ".constructor");
             this._handles = [];
+			this._data = [];
+			this._labels = [];
+			this._funnel = null;
+			this._guids = [];
+			this._options = {};
+			this._colors = [];
         },
 
         // dijit._WidgetBase.postCreate is called after constructing the widget. Implement to do extra setup work.
         postCreate: function() {
             logger.debug(this.id + ".postCreate");
 			this._hideProgress();
-
-			this.RGraphFunnel.firstChild.nextSibling.style.cursor = 'pointer';	
-			
+		
 			// set dimensions based on widget settings
 			this.cvs.width = this.funnelWidth;
 			this.cvs.height = this.funnelHeight;
@@ -87,12 +95,10 @@ define([
         // mxui.widget._WidgetBase.update is called when context is changed or initialized. Implement to re-render and / or fetch data.
         update: function(obj, callback) {
 			
-            logger.debug(this.id + ".update");
+            //console.log(".update");
 			this._hideProgress();
-            this._contextObj = obj;
-			
             this._resetSubscriptions();
-            this._updateRendering();
+            this._updateRendering(obj);
 
             if (typeof callback !== "undefined") {
               callback();
@@ -101,12 +107,14 @@ define([
 
         // mxui.widget._WidgetBase.uninitialize is called when the widget is destroyed. Implement to do special tear-down work.
         uninitialize: function() {
+			this._cleanUpDomNode(this.RGraphFunnel,this._updateRendering(this._contextObj));
+			
             // Clean up listeners, helper objects, etc. There is no need to remove listeners added with this.connect / this.subscribe / this.own.
 			this._hideProgress();
 
         },
         _drawChart: function(slices) {
-			
+
 			// populate arrays based on Get Slices microflow objectdata for reference later on
 			for (var i = 0; i < slices.length; i++){
 				var value = slices[i].get(this.valueAttr);
@@ -119,7 +127,7 @@ define([
 				this._guids.push(guid);
 				
 			}
-			// set appearance options based on Modeler widget settings
+			// set appearance options based on Modeler widget settings. Setting textAccesible = false is needed to circumvent a bug in RGraph, not showing labels anymore when reload is continuously being done.
 			this._options = {
 				gutterRight: this.gutterRight,
 				gutterLeft: this.gutterLeft,
@@ -144,15 +152,17 @@ define([
 				labelsX: 10,
 				labelsSticks: this.labelsSticks,
 				strokestyle: 'rgba(0,0,0,0)',
-				textAccessible: true
+				textAccessible: false
 			};
+
 			// create funnel canvas
+
 			this._funnel = new RGraph.Funnel({
 				id: this.cvs.id,
 				data: this._data,
 				options: this._options
 			});
-			
+
 			// eventsClick option does not work, hence use this
 			this._funnel.set({
 				eventsClick: dojoLang.hitch(this,function (e, shape) {
@@ -164,7 +174,7 @@ define([
 				})
 			});	
 			// draw the funnel with RGraph API
-			this._funnel.draw();
+			RGraph.redraw();
 
 			// hide progressbar
 			this._hideProgress();
@@ -172,19 +182,21 @@ define([
         },
 
         // Rerender the interface.
-        _updateRendering: function() {
+        _updateRendering: function(obj) {
             logger.debug(this.id + "._updateRendering");
-
+			this._contextObj = obj;
             // Draw or reload.
-            if (this._contextObj !== null) {
+            if (this._contextObj !== null && this._data.length === 0) {
 				this._showProgress();
-				this._loadTreeData();
-            } else {
+				this._loadData();
+            } else if (this._contextObj !== null && this._data.length > 0){
+				RGraph.redraw();
+			} else {
                 dojoStyle.set(this.domNode, "display", "none"); // Hide widget dom node.
             }
 
         },
-		_loadTreeData : function () {
+		_loadData : function () {
 			if (this.sliceMicroflow){
 				// get slice list from microflow
 				mx.ui.action(this.sliceMicroflow,{
@@ -225,7 +237,7 @@ define([
                 _objectHandle = this.subscribe({
                     guid: this._contextObj.getGuid(),
                     callback: dojoLang.hitch(this, function (guid) {
-                        this._updateRendering();
+                        this._cleanUpDomNode(this.RGraphFunnel,this._updateRendering(this._contextObj));
                     })
                 });
 
@@ -266,6 +278,18 @@ define([
 				},this);
 			}
 		},
+		_cleanUpDomNode: function(node,callback) {
+				
+            while (node.firstChild ) {
+               node.removeChild(node.firstChild);
+			   			   
+            }
+			RGraph.ObjectRegistry.clear();
+			if (typeof callback !== "undefined") {
+              callback();
+            }
+
+        }
 
     });
 });
